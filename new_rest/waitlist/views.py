@@ -29,8 +29,9 @@ def waitlist_view(request):
             table = Table.objects.filter(number= returned_num['accept_sugg']).first()
             n = cust.name
             ps = cust.party_size
+            at = cust.arrival_time
             wt = cust.wait_time
-            wait_done = WaitlistHistory(name = n, party_size = ps, wait_time = wt)
+            wait_done = WaitlistHistory(name = n, party_size = ps, arrival_time = at, wait_time = wt)
             wait_done.save()
             table.party = cust.name
             table.party_size = cust.party_size
@@ -49,17 +50,14 @@ def waitlist_view(request):
             table = Table.objects.filter(number= returned_num['table_num']).first()
             n = cust.name
             ps = cust.party_size
+            at = cust.arrival_time
             wt = cust.wait_time
-            wait_done = WaitlistHistory(name = n, party_size = ps, wait_time = wt)
+            wait_done = WaitlistHistory(name = n, party_size = ps, arrival_time = at, wait_time = wt)
             wait_done.save()
             table.party = cust.name
             table.party_size = cust.party_size
             table.time_seated = datetime.now(tz)
             table.save()
-            cust.delete()
-        elif "removal" in returned_num:
-            print(returned_num['guest_name'])
-            cust = Wait.objects.filter(name= returned_num['guest_name']).first()
             cust.delete()
         assign_tables()
     return render(request, "waitlist.html", context)
@@ -74,9 +72,10 @@ def tables_view(request):
         p = table.party
         ps = table.party_size
         s = table.server
+        ts = table.time_seated
         dt = table.dining_time
         if p != "Empty" and p != "Pending":
-            table_done = TableHistory(party = p, party_size = ps, server = s, dining_time = dt)
+            table_done = TableHistory(party = p, party_size = ps, server = s, time_seated = ts, dining_time = dt)
             table_done.save()
         table.party = "Empty"
         table.save()
@@ -137,3 +136,72 @@ def table_history_view(request):
         'tables' : tables
     }
     return render(request, "tablehistory.html", context)
+
+def report_view(request):
+    info = []
+    all_waits = WaitlistHistory.objects.all()
+    all_tables = TableHistory.objects.all()
+    if all_waits:
+        cust_count = 0
+        total_wait_time = 0
+        count2 = 0
+        total_wait_time2 = 0
+        count4 = 0
+        total_wait_time4 = 0
+        count6 = 0
+        total_wait_time6 = 0
+        count8 = 0
+        total_wait_time8 = 0
+        for wait in all_waits:
+            wait_time = float(wait.wait_time)
+            party_size = float(wait.party_size)
+            cust_count += party_size
+            total_wait_time += wait_time
+            if party_size == 1 or party_size == 2:
+                total_wait_time2 += wait_time
+                count2 += 1
+            if party_size == 3 or party_size == 4:
+                total_wait_time4 += wait_time
+                count4 += 1
+            if party_size == 5 or party_size == 6:
+                total_wait_time6 += wait_time
+                count6 += 1
+            if party_size == 7 or party_size == 8:
+                total_wait_time8 += wait_time
+                count8 += 1
+        cc = 'Total Customers: ' + str(cust_count)
+        info.append(cc)
+        total_tables = len(all_waits)
+        tt = 'Total Tables: ' + str(total_tables)
+        info.append(tt)
+        avg_wait = total_wait_time/len(all_waits)
+        aw = 'Average Wait Time: ' + str(avg_wait)
+        info.append(aw)
+        if count2 != 0:
+            avg_wait2 = total_wait_time2/count2
+            aw2 = 'Average Wait Time for 2: ' + str(avg_wait2)
+            info.append(aw2)
+        if count4 != 0:
+            avg_wait4 = total_wait_time4/count4
+            aw4 = 'Average Wait Time for 4: ' + str(avg_wait4)
+            info.append(aw4)
+        if count6 != 0:
+            avg_wait6 = total_wait_time6/count6
+            aw6 = 'Average Wait Time for 6: ' + str(avg_wait6)
+            info.append(aw6)
+        if count8 != 0:
+            avg_wait8 = total_wait_time8/count8
+            aw8 = 'Average Wait Time for 8: ' + str(avg_wait8)
+            info.append(aw8)
+    if all_tables:
+        total_dining_time = 0
+        for table in all_tables:
+            dining_time = float(table.dining_time)
+            total_dining_time += dining_time
+        avg_dine = total_dining_time/len(all_tables)
+        dt = 'Average Dining Time: ' + str(avg_dine)
+        info.append(dt)
+    context = {
+        'info' : info,
+        }
+    return render(request, "report.html", context)
