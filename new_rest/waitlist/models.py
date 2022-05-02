@@ -9,7 +9,7 @@ tz = timezone.get_default_timezone()
 # Waitlist
 class Wait(models.Model):
     # Guest name
-    name = models.CharField(max_length = 120, unique=True) 
+    name = models.CharField(max_length = 120)
     # Size of Party
     party_size = models.CharField(max_length = 20)
     # Time of Arrival
@@ -34,6 +34,8 @@ class Table(models.Model):
     party = models.CharField(max_length = 20, default = "Empty")
     # Seating capacity of table
     seats = models.IntegerField()
+    # Party Size
+    party_size = models.IntegerField()
     # Time seated
     time_seated = models.DateTimeField(auto_now_add = True)
     # Server
@@ -64,3 +66,27 @@ class Config(models.Model):
     def __str__(self):
         name = "Configuration for " + str(self.server_names)
         return name
+
+class WaitlistHistory(models.Model):
+    # Guest name
+    name = models.CharField(max_length = 120)
+    # Size of Party
+    party_size = models.CharField(max_length = 20)
+    # Wait time
+    wait_time = models.CharField(max_length = 20)
+
+    def __str__(self):
+        return self.name
+
+class TableHistory(models.Model):
+    # Party name
+    party = models.CharField(max_length = 20, default = "Empty")
+    # Party Size
+    party_size = models.IntegerField()
+    # Server
+    server = models.CharField(max_length = 20, default = "None")
+    # Dining time
+    dining_time = models.CharField(max_length = 20)
+
+    def __str__(self):
+        return self.party
