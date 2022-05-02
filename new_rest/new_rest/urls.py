@@ -16,9 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from pages.views import home_view
-from waitlist.views import waitlist_view
-from waitlist.views import tables_view
-from waitlist.views import config_view
+from waitlist.views import waitlist_view, tables_view, config_view, waitlist_history_view, table_history_view
 
 
 urlpatterns = [
@@ -27,4 +25,6 @@ urlpatterns = [
     path('waitlist/', waitlist_view, name = "waitlist"),
     path('tables/', tables_view, name = "tables"),
     path('config/', config_view, name = "config"),
+    path('tablehistory/', table_history_view, name = "tablehistory"),
+    path('wlhistory/', waitlist_history_view, name = "waitlisthistory"),
 ]
