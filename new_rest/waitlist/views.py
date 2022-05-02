@@ -45,6 +45,10 @@ def waitlist_view(request):
             table.time_seated = datetime.now(tz)
             table.save()
             cust.delete()
+        elif "removal" in returned_num:
+            print(returned_num['guest_name'])
+            cust = Wait.objects.filter(name= returned_num['guest_name']).first()
+            cust.delete()
         assign_tables()
     return render(request, "waitlist.html", context)
 

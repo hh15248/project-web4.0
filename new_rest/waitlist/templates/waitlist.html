@@ -41,6 +41,7 @@ tr:nth-child(even) {
     <th>Wait Time</th>
     <th>Assignment Suggestion</th>
     <th>Manual Assign</th>
+    <th>Remove From Waitlist</th>
   </tr>
   <tr>
     {% for party in waitlist %}
@@ -54,7 +55,7 @@ tr:nth-child(even) {
             <form method = "POST">
               {% csrf_token %}
               <button name = "accept_sugg" value = "{{ party.assign_sugg }}">Accept</button>
-              <button name = "reject_sugg" value = "{{ party.assign_sugg }}">Reject</button>
+              <!-- <button name = "reject_sugg" value = "{{ party.assign_sugg }}">Reject</button> -->
             </form>
           {% else %}
             None
@@ -73,6 +74,11 @@ tr:nth-child(even) {
             <input name = 'guest_name' value = '{{ party.name }}' hidden=True /> 
             <input name = "manual_submit" type = 'submit' value = 'Assign' />
             
+          </form>
+          <td><form action = '.' method = 'POST'>
+              {% csrf_token %}
+            <input name = 'guest_name' value = '{{ party.name }}' hidden=True /> 
+            <input name = "removal" type = 'submit' value = 'Remove' />
           </form>
   </tr>
     {% endfor %}
