@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="margin-left:25%">
+<h1>Shift Statistics</h1>
+
+  {% for stat in info %}
+    <p>{{ stat }}</p>
+  {% endfor %}
+
+</div>
+{% endblock %}
