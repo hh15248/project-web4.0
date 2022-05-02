@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="margin-left:25%">
+
+<style>
+table {
+  font-family: verdana, sans-serif;
+  border-collapse: collapse;
+  width: 90%;
+}
+
+td, th {
+  border: 1px solid black;
+  text-align: middle;
+  padding: 12px;
+}
+
+tr:nth-child(even) {
+  background-color: #D6EAF8;
+}
+</style>
+
+<h1>Table History</h1>
+
+<table>
+  <tr>
+    <th>Party Name</th>
+    <th>Party Size</th>
+    <th>Server</th>
+    <th>Dining Time</th>
+  </tr>
+  <tr>
+    {% for table in tablehistory %}
+        <td>{{ table.party }}
+        <td>{{ table.party_size }}
+        <td>{{ table.server }}
+        <td>{{ table.dining_time }} minutes
+  </tr>
+    {% endfor %}
+</table>
+</div>
+
+{% endblock %}
