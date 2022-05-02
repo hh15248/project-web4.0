@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .models import Wait, Table, Config
+from .models import Wait, Table, Config, WaitlistHistory, TableHistory
 from .forms import WaitForm, ConfigForm
 from .assignment import assign_tables
 from datetime import datetime
@@ -27,7 +27,13 @@ def waitlist_view(request):
         if "accept_sugg" in returned_num:
             cust = Wait.objects.filter(assign_sugg= returned_num['accept_sugg']).first()
             table = Table.objects.filter(number= returned_num['accept_sugg']).first()
+            n = cust.name
+            ps = cust.party_size
+            wt = cust.wait_time
+            wait_done = WaitlistHistory(name = n, party_size = ps, wait_time = wt)
+            wait_done.save()
             table.party = cust.name
+            table.party_size = cust.party_size
             table.time_seated = datetime.now(tz)
             table.save()
             cust.delete()
@@ -41,7 +47,13 @@ def waitlist_view(request):
         elif "manual_submit" in returned_num:
             cust = Wait.objects.filter(name= returned_num['guest_name']).first()
             table = Table.objects.filter(number= returned_num['table_num']).first()
+            n = cust.name
+            ps = cust.party_size
+            wt = cust.wait_time
+            wait_done = WaitlistHistory(name = n, party_size = ps, wait_time = wt)
+            wait_done.save()
             table.party = cust.name
+            table.party_size = cust.party_size
             table.time_seated = datetime.now(tz)
             table.save()
             cust.delete()
@@ -50,10 +62,18 @@ def waitlist_view(request):
 
 def tables_view(request):
     tables = Table.objects.all()
+    tablehistory = TableHistory.objects.all()
     context = {'tables' : tables}
     returned_num = (request.POST or None)
     if returned_num is not None:
         table = Table.objects.filter(number= returned_num['table_num']).first()
+        p = table.party
+        ps = table.party_size
+        s = table.server
+        dt = table.dining_time
+        if p != "Empty" and p != "Pending":
+            table_done = TableHistory(party = p, party_size = ps, server = s, dining_time = dt)
+            table_done.save()
         table.party = "Empty"
         table.save()
         assign_tables()
@@ -92,6 +112,24 @@ def config_view(request):
             table_size_list.append(8)
         Table.objects.all().delete()
         for i in range(1, total_tables + 1):
-            table = Table(number = i, party = "Empty", seats = table_size_list[i-1], time_seated = datetime.now(tz), server = names_list[i % num])
+            table = Table(number = i, party = "Empty", seats = table_size_list[i-1], party_size = 0, time_seated = datetime.now(tz), server = names_list[i % num])
             table.save()
     return render(request, "config.html", context)
+
+def waitlist_history_view(request):
+    waithistory = WaitlistHistory.objects.all()
+    waits = Wait.objects.all()
+    context = {
+        'waithistory' : waithistory,
+        'waits' : waits
+    }
+    return render(request, "wlhistory.html", context)
+
+def table_history_view(request):
+    tablehistory = TableHistory.objects.all()
+    tables = Table.objects.all()
+    context = {
+        'tablehistory' : tablehistory,
+        'tables' : tables
+    }
+    return render(request, "tablehistory.html", context)
