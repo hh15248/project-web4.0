@@ -179,23 +179,23 @@ def report_view(request):
         tt = 'Total Tables: ' + str(total_tables)
         info.append(tt)
         avg_wait = total_wait_time/len(all_waits)
-        aw = 'Average Wait Time: ' + str(avg_wait)
+        aw = 'Average Wait Time: ' + str("{:.2f}".format(avg_wait)) + ' minutes'
         info.append(aw)
         if count2 != 0:
             avg_wait2 = total_wait_time2/count2
-            aw2 = 'Average Wait Time for 2: ' + str(avg_wait2)
+            aw2 = 'Average Wait Time for Table of 2: ' + str("{:.2f}".format(avg_wait2)) + ' minutes'
             info.append(aw2)
         if count4 != 0:
             avg_wait4 = total_wait_time4/count4
-            aw4 = 'Average Wait Time for 4: ' + str(avg_wait4)
+            aw4 = 'Average Wait Time for Table of 4: ' + str("{:.2f}".format(avg_wait4)) + ' minutes'
             info.append(aw4)
         if count6 != 0:
             avg_wait6 = total_wait_time6/count6
-            aw6 = 'Average Wait Time for 6: ' + str(avg_wait6)
+            aw6 = 'Average Wait Time for Table of 6: ' + str("{:.2f}".format(avg_wait6)) + ' minutes'
             info.append(aw6)
         if count8 != 0:
             avg_wait8 = total_wait_time8/count8
-            aw8 = 'Average Wait Time for 8: ' + str(avg_wait8)
+            aw8 = 'Average Wait Time for Table of 8: ' + str("{:.2f}".format(avg_wait8)) + ' minutes'
             info.append(aw8)
     if all_tables:
         total_dining_time = 0
@@ -203,8 +203,43 @@ def report_view(request):
             dining_time = float(table.dining_time)
             total_dining_time += dining_time
         avg_dine = total_dining_time/len(all_tables)
-        dt = 'Average Dining Time: ' + str(avg_dine)
+        dt = 'Average Dining Time: ' + str("{:.2f}".format(avg_dine)) + ' minutes'
         info.append(dt)
+
+    if all_waits:
+        first_customer = WaitlistHistory.objects.first()
+        first_arrival = first_customer.arrival_time + timedelta(hours = -5)
+        fa = 'First customer arrived at ' + str(first_arrival.strftime("%H:%M %p"))
+        info.append(fa)
+        last_customer = WaitlistHistory.objects.last()
+        last_arrival = last_customer.arrival_time + timedelta(hours = -5)
+        la = 'Last customer arrived at ' + str(last_arrival.strftime("%H:%M %p"))
+        info.append(la)
+        total_time_open = last_arrival - first_arrival
+        tt_sec = total_time_open.total_seconds()
+        tt_hr = int(-(-tt_sec//3600))
+        time_intervals = []
+        arrival_list = []
+        for i in range(tt_hr):
+            interval = first_arrival + timedelta(hours = i + 5)
+            time_intervals.append(interval)
+        for j in range(tt_hr):
+            arrivals = 0
+            for wait in all_waits:
+                if wait.arrival_time > time_intervals[j]:
+                    arrivals += 1
+            arrival_list.append(arrivals)
+        info.append(arrival_list)
+        cust_per_hour = []
+        for k in range(1,len(arrival_list)):
+            val = arrival_list[k-1] - arrival_list[k]
+            cust_per_hour.append(val)
+            if k == len(arrival_list)-1:
+                val = arrival_list[k]
+                cust_per_hour.append(val)
+        for l in range(len(cust_per_hour)):
+            arrival_info = str(cust_per_hour[l]) + ' customers in hour ' + str(l+1)
+            info.append(arrival_info)
     context = {
         'info' : info,
         }
