@@ -46,29 +46,29 @@ Note: If not editing the Django code, only running the site is necessary after t
 View the entire waitlist and each customer's information: party name, size, arrival time, estimated wait time, and running wait time.
 
 Add people, remove people, assign people on the waitlist to the computer's suggested table, or manually assign people to tables.
-![matplotlib figure](readme_pics/waitlist.png)
+![My Image](readme_pics/waitlist.png)
 
 ## Tables
 View all the tables and their information: table number, seated party, capacity, time seated, running dine time, and server name.
 
 Clear the table for a new customer.
-![matplotlib figure](readme_pics/tables.png)
+![My Image](readme_pics/tables.png)
 
 ## Configure
 View the current restaurant configuration for the shift.
 
 Define the server names and number of each type of table to start a new shift with your restaurant setup.
-![matplotlib figure](readme_pics/config.png)
+![My Image](readme_pics/config.png)
 
 ## Waitlist History
 View everyone who has been on the waitlist during/after the shift.
-![matplotlib figure](readme_pics/waitlist_history.png)
+![My Image](readme_pics/waitlist_history.png)
 
 ## Table History
 View information about all of the tables during/after the shift.
-![matplotlib figure](readme_pics/table_history.png)
+![My Image](readme_pics/table_history.png)
 
 ## Report
 View statistical information on the average wait times, table turnover, server workload, and more about the shift.
-![matplotlib figure](readme_pics/stats.png)
+![My Image](readme_pics/stats.png)
 
