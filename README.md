@@ -1,4 +1,4 @@
-# web4.0 Restuarant Manager
+# web4.0 Restaurant Manager
 Help out your host and manager, or just see what Django can do with this creative webapp.
 
 # Key Features
@@ -7,8 +7,8 @@ Help out your host and manager, or just see what Django can do with this creativ
 * Table suggestion override / manual assignment available
 * Smart server assignment to balance workload on your waiters and waitresses
 * Automatic estimations of wait time based on customer arrival and party size
-* Change your resturant layout at the start of every shift to accomodate your current setup
-* View a report during or at the end of your shift with important statistics on your restuarant performance
+* Change your restaurant layout at the start of every shift to accomodate your current setup
+* View a report during or at the end of your shift with important statistics on your restaurant performance
     * Customer wait times, server workload, table turnover, etc.
 
 
@@ -53,9 +53,9 @@ View all the tables and their information: table number, seated party, capacity,
 Clear the table for a new customer.
 
 ## Configure
-View the current resturant configuration for the shift.
+View the current restaurant configuration for the shift.
 
-Define the server names and number of each type of table to start a new shift with your restuarant setup.
+Define the server names and number of each type of table to start a new shift with your restaurant setup.
 
 ## Waitlist History
 View everyone who has been on the waitlist during/after the shift.
