@@ -24,7 +24,7 @@ Help out your host and manager, or just see what Django can do with this creativ
 # View the Site
 1. Navigate into the new_rest directory
     ```
-    cd new_rest
+    cd new_rest/
     ```
 2. Make migrations
    ```
