@@ -1,3 +1,4 @@
+from re import L
 from django.db import models
 import time
 from datetime import datetime
@@ -24,6 +25,8 @@ class Table(models.Model):
 
     @property
     def dining_time(self):
+        if self.party in ["Empty","Pending"]:
+            return 0
         current_time = datetime.now(tz)
         dining_time = current_time - self.time_seated
         return dining_time.total_seconds() // 60
