@@ -30,6 +30,10 @@ def find_best_person(table, waiting_people):
             return None 
 
 def assign_server():
+    """
+    Function finds the server that is working the least number of tables
+    return: server name str
+    """
     from .models import Table, Config
     servers_list = list(Config.objects.last().server_names.split(','))
     current_servers = [table.server for table in Table.objects.exclude(server = "None")]
@@ -39,34 +43,10 @@ def assign_server():
     min_server = Table.objects.exclude(party = "Empty").exclude(server = "None").values("server").annotate(count = Count("server")).order_by("count").first()["server"]
     return min_server
 
-
-
-
-# def find_best_table(reviewed_table_nums):
-#     from .models import Table
-#     dfTables = pd.DataFrame(Table.objects.all().values())
-
-#     servers_list = list(dfTables['server'].unique())
-#     dfFilled = dfTables[dfTables['party'] != "Empty"]
-#     empty_servers_list = list(dfTables['server'].unique())
-
-#     cust_count = {}
-#     for server in servers_list:
-#         dfServer = dfFilled[dfFilled['server'] == server]
-#         cust_count[server] = len(dfServer.index)
-#     servers_sort = dict(sorted(cust_count.items(), key = lambda item: item[1]))
-#     for i in range(len(list(servers_sort.keys()))):
-#         min_server = list(servers_sort.keys()).pop(i)
-#         if min_server in empty_servers_list:
-#             break
-
-#     for table in list(Table.objects.filter(server = min_server, party = "Empty")):
-#         if table.number not in reviewed_table_nums:
-#             return table
-#     return None
-
-
 def assign_tables():
+    """
+    Function loops through every open table and makes assignment suggestion
+    """
     from .models import Wait, Table
     # Check that table assignment suggestions are only for empty tables
     full_tables = [table.number for table in list(Table.objects.exclude(party__in = ["Empty","Pending"]))]

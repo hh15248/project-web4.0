@@ -8,6 +8,7 @@ from django.utils import timezone
 
 tz = timezone.get_default_timezone()
 
+# Estimate the customer's wait time based on the available tables and competing people before them on the waitlist and party size
 def estimate_wait(formW):
     # Assume average turnover is 90 min
     party_size = formW["party_size"].value()
@@ -22,7 +23,6 @@ def estimate_wait(formW):
         return 0
     # See if there is an empty table, if so, wait 0 min
     for table in tables:
-        print("I found an empty table")
         if table.party == "Empty":
             return 0
     competing = Wait.objects.filter(party_size__in = [party_size, elig])
@@ -30,21 +30,20 @@ def estimate_wait(formW):
     print(tables)
     # If people on waitlist for each table already, estimate 90 minute wait
     if len(competing) >= len(tables):
-        print("More competing people than people tables")
         return 90
     # If competing with other people, estimate wait
-    print("I made it too far")
     place_in_line = len(competing)
     table_dine_time = list(tables)[place_in_line].dining_time
     estimated_wait = 90 - table_dine_time
     return estimated_wait
 
 
-
+# View for the waitlist page
 def waitlist_view(request):
     waitlist = Wait.objects.all()
     formW = WaitForm(request.POST or None)
     open_tables_list = [table.number for table in Table.objects.filter(party__in = ["Empty","Pending"])]
+    # If the user added someone to the form, add them to the waitlist
     if formW.is_valid():
         obj = formW.save(commit=False)
         obj.est_wait = estimate_wait(formW)
@@ -58,6 +57,7 @@ def waitlist_view(request):
     }
     returned_num = (request.POST or None)
     if returned_num is not None:
+        # If the user clicked accept assignment suggestion, assign the suggested table
         if "accept_sugg" in returned_num:
             cust = Wait.objects.filter(assign_sugg= returned_num['accept_sugg']).first()
             table = Table.objects.filter(number= returned_num['accept_sugg']).first()
@@ -73,6 +73,7 @@ def waitlist_view(request):
             table.server = assign_server()
             table.save()
             cust.delete()
+        # If the user selected a table and submitted their own assignment, assign their chosen table
         elif "manual_submit" in returned_num:
             cust = Wait.objects.filter(name= returned_num['guest_name']).first()
             table = Table.objects.filter(number= returned_num['table_num']).first()
@@ -88,6 +89,7 @@ def waitlist_view(request):
             table.server = assign_server()
             table.save()
             cust.delete()
+        # If the user used the removal button, delete the person off the waitlist
         elif "removal" in returned_num:
             print("Removed guest name: ", returned_num['guest_name'])
             cust = Wait.objects.filter(name= returned_num['guest_name']).first()
@@ -101,11 +103,13 @@ def waitlist_view(request):
         assign_tables()
     return render(request, "waitlist.html", context)
 
+# View for tables page
 def tables_view(request):
     tables = Table.objects.all()
     tablehistory = TableHistory.objects.all()
     context = {'tables' : tables}
     returned_num = (request.POST or None)
+    # If the user pushed clear table, delete the party from the tables record
     if returned_num is not None:
         table = Table.objects.filter(number= returned_num['table_num']).first()
         p = table.party
@@ -123,9 +127,11 @@ def tables_view(request):
     print(returned_num)
     return render(request, "tables.html", context)
 
+# View for the configure restaurant page
 def config_view(request):
     config = Config.objects.all()
     formC = ConfigForm(request.POST or None)
+    # If the user did the form, create the restaurant with their parameters
     if formC.is_valid():
         Config.objects.all().delete()
         formC.save()
@@ -158,6 +164,7 @@ def config_view(request):
     }
     return render(request, "config.html", context)
 
+# View for the waitlist history page
 def waitlist_history_view(request):
     waithistory = WaitlistHistory.objects.all()
     waits = Wait.objects.all()
@@ -167,6 +174,7 @@ def waitlist_history_view(request):
     }
     return render(request, "wlhistory.html", context)
 
+# View for the table history page
 def table_history_view(request):
     tablehistory = TableHistory.objects.all()
     tables = Table.objects.all()
@@ -176,6 +184,7 @@ def table_history_view(request):
     }
     return render(request, "tablehistory.html", context)
 
+# View for the report page
 def report_view(request):
     info = []
     all_waits = WaitlistHistory.objects.all()

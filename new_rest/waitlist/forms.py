@@ -2,6 +2,7 @@ from django import forms
 
 from .models import Wait, Config
 
+# Add someone to the waitlist form
 class WaitForm(forms.ModelForm):
     name = forms.CharField(max_length=20)
     party_size = forms.IntegerField()
@@ -14,7 +15,7 @@ class WaitForm(forms.ModelForm):
             'party_size',
         ]
 
-        
+# Configure the restaurant form       
 class ConfigForm(forms.ModelForm):
     server_names = forms.CharField(max_length = 100, widget=forms.TextInput(attrs={'placeholder': 'Matthew M, John B G'}))
     tables_for_2 = forms.IntegerField()
