@@ -59,7 +59,7 @@ Add people, remove people, assign people on the waitlist to the computer's sugge
 View all the tables and their information: table number, seated party, capacity, time seated, running dine time, and server name.
 
 Clear the table for a new customer.
-![My Image](readme_pics/table.png)
+![My Image](readme_pics/tables.png)
 
 ## Configure
 View the current restaurant configuration for the shift.
@@ -84,5 +84,7 @@ View all of your objects in the admin page by adding the extension "admin/" to t
  http://127.0.0.1:8000/admin/
 
 Login after making yourself a superuser.
+
 Add or delete people from the waitlist or tables.
+
 Clear your waitlist and table history.
