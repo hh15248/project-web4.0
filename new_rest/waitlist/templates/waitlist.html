@@ -38,7 +38,8 @@ tr:nth-child(even) {
     <th>Name</th>
     <th>Party Size</th>
     <th>Arrival Time</th>
-    <th>Wait Time</th>
+    <th>Running Wait Time</th>
+    <th>Estimated Wait Time</th>
     <th>Assignment Suggestion</th>
     <th>Manual Assign</th>
     <th>Remove From Waitlist</th>
@@ -48,14 +49,14 @@ tr:nth-child(even) {
         <td>{{ party.name }}
         <td>{{ party.party_size }}
         <td>{{ party.arrival_time }}
-        <td>{{ party.wait_time }}
+        <td>{{ party.wait_time }} minutes
+        <td>{{ party.est_wait }} minutes
         <td>
           {% if party.assign_sugg != 0 %}
             Table {{ party.assign_sugg }}
             <form method = "POST">
               {% csrf_token %}
               <button name = "accept_sugg" value = "{{ party.assign_sugg }}">Accept</button>
-              <!-- <button name = "reject_sugg" value = "{{ party.assign_sugg }}">Reject</button> -->
             </form>
           {% else %}
             None

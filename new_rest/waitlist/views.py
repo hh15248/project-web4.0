@@ -8,14 +8,39 @@ from django.utils import timezone
 
 tz = timezone.get_default_timezone()
 
+def estimate_wait(formW):
+    # Assume average turnover is 90 min
+    party_size = formW["party_size"].value()
+    tables = Table.objects.filter(seats = party_size).order_by("time_seated")
+    # Check if there is an empty table of right size, if so, wait is 0 min
+    for table in tables:
+        if table.party == "Empty":
+            return 0
+    # Find other eligible party sizes competing for same primary table
+    if int(party_size)%2 == 0:
+        elig = int(party_size)-1
+    else:
+        elig = int(party_size)+1
+    competing = Wait.objects.filter(party_size__in = [party_size, elig])
+    # If people on waitlist for each table already, estimate 90 minute wait
+    if len(competing) >= len(tables):
+        return 90
+    # If competing with other people, estimate wait
+    place_in_line = len(competing)
+    table_dine_time = list(tables)[place_in_line].dining_time
+    estimated_wait = 90 - table_dine_time
+    return estimated_wait
+
+
 
 def waitlist_view(request):
     waitlist = Wait.objects.all()
     formW = WaitForm(request.POST or None)
-    open_tables_list = [table.number for table in Table.objects.filter(party = "Empty")]
-    open_tables_list += [table.number for table in Table.objects.filter(party = "Pending")]
+    open_tables_list = [table.number for table in Table.objects.filter(party__in = ["Empty","Pending"])]
     if formW.is_valid():
-        formW.save()
+        obj = formW.save(commit=False)
+        obj.est_wait = estimate_wait(formW)
+        obj.save()
         formW = WaitForm()
         assign_tables()
     context = {
@@ -59,8 +84,10 @@ def waitlist_view(request):
             print("Removed guest name: ", returned_num['guest_name'])
             cust = Wait.objects.filter(name= returned_num['guest_name']).first()
             if cust.assign_sugg:
+                print("IM SUPPOSED TO UPDATE TO EMPTY")
                 table = Table.objects.filter(number = cust.assign_sugg).first()
                 table.party = "Empty"
+                table.save()
                 print("Set table {} to empty".format(table.number))
             cust.delete()
         assign_tables()
