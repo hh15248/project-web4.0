@@ -33,10 +33,18 @@ Help out your host and manager, or just see what Django can do with this creativ
     ```
     python manage.py migrate
     ```
-4. Run the site
+4. Make yourself a superuser (follow prompts)
+    ```
+    python manage.py createsuperuser
+    ```
+5. Run the site
     ```
     python manage.py runserver
     ```
+6. Paste the link in your browser to view
+    http://127.0.0.1:8000/
+ 
+
 
 Note: If not editing the Django code, only running the site is necessary after the initial run
 
@@ -70,3 +78,11 @@ View information about all of the tables during/after the shift.
 ## Report
 View statistical information on the average wait times, table turnover, server workload, and more about the shift.
 ![My Image](readme_pics/stats.png)
+
+# Admin page
+View all of your objects in the admin page by adding the extension "admin/" to the home url.
+ http://127.0.0.1:8000/admin/
+
+Login after making yourself a superuser.
+Add or delete people from the waitlist or tables.
+Clear your waitlist and table history.
