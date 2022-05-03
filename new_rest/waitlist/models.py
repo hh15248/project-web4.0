@@ -73,6 +73,8 @@ class WaitlistHistory(models.Model):
     name = models.CharField(max_length = 120)
     # Size of Party
     party_size = models.CharField(max_length = 20)
+    # Arrival time
+    arrival_time = models.DateTimeField(auto_now_add = True)
     # Wait time
     wait_time = models.CharField(max_length = 20)
 
@@ -86,6 +88,8 @@ class TableHistory(models.Model):
     party_size = models.IntegerField()
     # Server
     server = models.CharField(max_length = 20, default = "None")
+    # Time Seated
+    time_seated = models.DateTimeField(auto_now_add = True)
     # Dining time
     dining_time = models.CharField(max_length = 20)
 
