@@ -16,9 +16,8 @@ Help out your host and manager, or just see what Django can do with this creativ
 1. Navigate to your desired directory
 2. Create and/or activate your virtual environment
     * Virtual environment help: https://docs.python.org/3/library/venv.html
-3. Ensure Django and Selenium are installed
+3. Ensure Django is installed
     * Django installation: https://docs.djangoproject.com/en/4.0/topics/install/
-    * Selenium installation: https://selenium-python.readthedocs.io/installation.html
 4. Clone your repository
 
 # View the Site
