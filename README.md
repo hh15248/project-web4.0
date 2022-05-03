@@ -23,17 +23,25 @@ Help out your host and manager, or just see what Django can do with this creativ
 
 # View the Site
 1. Navigate into the new_rest directory
+    ```
     cd new_rest
+    ```
 2. Make migrations
+   ```
     python manage.py makemigrations
+    ``` 
 3. Migrate
+    ```
     python manage.py migrate
+    ```
 4. Run the site
+    ```
     python manage.py runserver
+    ```
 
 Note: If not editing the Django code, only running the site is necessary after the initial run
 
-# Pages Breakdown
+# Page Breakdown
 ## Waitlist
 View the entire waitlist and each customer's information: party name, size, arrival time, estimated wait time, and running wait time.
 
