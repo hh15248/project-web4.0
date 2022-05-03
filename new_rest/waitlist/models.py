@@ -3,13 +3,14 @@ import time
 from datetime import datetime
 from django.utils import timezone
 
+
 # Create your models here.
 tz = timezone.get_default_timezone()
 
 # Waitlist
 class Wait(models.Model):
     # Guest name
-    name = models.CharField(max_length = 120)
+    name = models.CharField(max_length = 120, unique = True)
     # Size of Party
     party_size = models.CharField(max_length = 20)
     # Time of Arrival
