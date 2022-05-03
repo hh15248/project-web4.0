@@ -11,7 +11,12 @@ tz = timezone.get_default_timezone()
 def estimate_wait(formW):
     # Assume average turnover is 90 min
     party_size = formW["party_size"].value()
-    tables = Table.objects.filter(seats = party_size).order_by("time_seated")
+    # Find other eligible party sizes competing for same primary table
+    if int(party_size)%2 == 0:
+        elig = int(party_size)-1
+    else:
+        elig = int(party_size)+1
+    tables = Table.objects.filter(seats__in = [party_size,elig]).order_by("time_seated")
     # If no one is seated, wait 0 min
     if len(tables) == 0:
         return 0
@@ -20,11 +25,6 @@ def estimate_wait(formW):
         print("I found an empty table")
         if table.party == "Empty":
             return 0
-    # Find other eligible party sizes competing for same primary table
-    if int(party_size)%2 == 0:
-        elig = int(party_size)-1
-    else:
-        elig = int(party_size)+1
     competing = Wait.objects.filter(party_size__in = [party_size, elig])
     print(competing)
     print(tables)
