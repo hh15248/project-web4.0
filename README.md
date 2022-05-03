@@ -79,7 +79,7 @@ View information about all of the tables during/after the shift.
 View statistical information on the average wait times, table turnover, server workload, and more about the shift.
 ![My Image](readme_pics/stats.png)
 
-# Admin page
+# Admin Page
 View all of your objects in the admin page by adding the extension "admin/" to the home url.
  http://127.0.0.1:8000/admin/
 
