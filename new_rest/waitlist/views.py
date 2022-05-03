@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from rest_framework import viewsets
 from .models import Wait, Table, Config, WaitlistHistory, TableHistory
 from .forms import WaitForm, ConfigForm
 from .assignment import assign_tables, assign_server
@@ -13,8 +12,12 @@ def estimate_wait(formW):
     # Assume average turnover is 90 min
     party_size = formW["party_size"].value()
     tables = Table.objects.filter(seats = party_size).order_by("time_seated")
-    # Check if there is an empty table of right size, if so, wait is 0 min
+    # If no one is seated, wait 0 min
+    if len(tables) == 0:
+        return 0
+    # See if there is an empty table, if so, wait 0 min
     for table in tables:
+        print("I found an empty table")
         if table.party == "Empty":
             return 0
     # Find other eligible party sizes competing for same primary table
@@ -23,10 +26,14 @@ def estimate_wait(formW):
     else:
         elig = int(party_size)+1
     competing = Wait.objects.filter(party_size__in = [party_size, elig])
+    print(competing)
+    print(tables)
     # If people on waitlist for each table already, estimate 90 minute wait
     if len(competing) >= len(tables):
+        print("More competing people than people tables")
         return 90
     # If competing with other people, estimate wait
+    print("I made it too far")
     place_in_line = len(competing)
     table_dine_time = list(tables)[place_in_line].dining_time
     estimated_wait = 90 - table_dine_time

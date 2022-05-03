@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Wait, Table, Config
+from .models import Wait, Config
 
 class WaitForm(forms.ModelForm):
     name = forms.CharField(max_length=20)

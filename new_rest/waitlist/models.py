@@ -1,6 +1,4 @@
-from re import L
 from django.db import models
-import time
 from datetime import datetime
 from django.utils import timezone
 

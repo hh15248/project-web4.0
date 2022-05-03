@@ -1,6 +1,4 @@
-from datetime import datetime
 from django.utils import timezone
-import pandas as pd
 from django.db.models import Count
 
 tz = timezone.get_default_timezone()
