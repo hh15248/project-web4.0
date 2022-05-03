@@ -3,8 +3,9 @@ from rest_framework import viewsets
 from .models import Wait, Table, Config, WaitlistHistory, TableHistory
 from .forms import WaitForm, ConfigForm
 from .assignment import assign_tables, assign_server
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils import timezone
+
 
 tz = timezone.get_default_timezone()
 
