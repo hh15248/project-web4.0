@@ -27,12 +27,14 @@ tr:nth-child(even) {
   <tr>
     <th>Party Name</th>
     <th>Party Size</th>
+    <th>Arrival Time</th>
     <th>Wait Time</th>
   </tr>
   <tr>
     {% for wait in waithistory %}
         <td>{{ wait.name }}
         <td>{{ wait.party_size }}
+        <td>{{ wait.arrival_time }}
         <td>{{ wait.wait_time }} minutes
   </tr>
     {% endfor %}
