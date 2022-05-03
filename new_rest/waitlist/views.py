@@ -229,7 +229,6 @@ def report_view(request):
                 if wait.arrival_time > time_intervals[j]:
                     arrivals += 1
             arrival_list.append(arrivals)
-        info.append(arrival_list)
         cust_per_hour = []
         for k in range(1,len(arrival_list)):
             val = arrival_list[k-1] - arrival_list[k]
